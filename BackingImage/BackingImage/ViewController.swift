@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  LayerTree
+//  BackingImage
 //
 //  Created by liuyongjia on 15/10/10.
 //  Copyright © 2015年 liuyongjia. All rights reserved.
@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
     private var kbaseView: UIView = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,31 +19,23 @@ class ViewController: UIViewController {
         self.view.addSubview(self.kbaseView)
         self.view.backgroundColor = UIColor.grayColor()
         
+        let image = UIImage(named: "Snowman")
+        self.kbaseView.layer.contents = image?.CGImage
         
-        let blueLayer = CALayer()
-        blueLayer.delegate = self
-        blueLayer.frame = CGRectMake(50, 50, 100, 100)
-        blueLayer.backgroundColor = UIColor.blueColor().CGColor
-        self.kbaseView.layer.addSublayer(blueLayer)
+        self.kbaseView.layer.contentsGravity = kCAGravityResizeAspect
+        if let scale = image?.scale {
+            self.kbaseView.layer.contentsScale = scale
+        }
         
-        blueLayer.display()
+        self.kbaseView.layer.masksToBounds = true
+
     }
-    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-
+        // Dispose of any resources that can be recreated.
     }
 
-}
 
-//Part 2 draw with CALayerDelegate
-//Hint:  the view is the layer’s delegate
-extension ViewController {
-    override func drawLayer(layer: CALayer, inContext ctx: CGContext) {
-        CGContextSetLineWidth(ctx, 10.0)
-        CGContextSetStrokeColorWithColor(ctx, UIColor.redColor().CGColor)
-        CGContextStrokeEllipseInRect(ctx, layer.bounds)
-    }
 }
 
