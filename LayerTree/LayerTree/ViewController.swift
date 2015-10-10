@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     
     private var kbaseView: UIView = UIView()
+    var blueLayer: CALayer = CALayer()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.kbaseView.frame.size = CGSizeMake(200, 200)
@@ -20,7 +21,6 @@ class ViewController: UIViewController {
         self.view.backgroundColor = UIColor.grayColor()
         
         
-        let blueLayer = CALayer()
         blueLayer.delegate = self
         blueLayer.frame = CGRectMake(50, 50, 100, 100)
         blueLayer.backgroundColor = UIColor.blueColor().CGColor
@@ -28,8 +28,49 @@ class ViewController: UIViewController {
         
         blueLayer.display()
     }
+    /**
+    Method 01
     
-
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        var point = touches.first?.locationInView(self.view)
+        guard let kpoint = point else {
+            return
+        }
+        point = self.kbaseView.layer.convertPoint(kpoint, fromLayer: self.view.layer)
+        if self.kbaseView.layer.containsPoint(point!) {
+            point = self.blueLayer.convertPoint(point!, fromLayer: self.kbaseView.layer)
+            if self.blueLayer.containsPoint(point!) {
+                let Alert = UIAlertController(title: "Inside Blue Layer", message: nil, preferredStyle: .Alert)
+                let sureAction = UIAlertAction(title: "OK", style: .Default) { (action) in}
+                Alert.addAction(sureAction)
+                self.presentViewController(Alert, animated: true) {}
+            } else {
+                let Alert = UIAlertController(title: "Inside White Layer", message: nil, preferredStyle: .Alert)
+                let sureAction = UIAlertAction(title: "OK", style: .Default) { (action) in}
+                Alert.addAction(sureAction)
+                self.presentViewController(Alert, animated: true) {}
+            }
+        }
+        
+    }
+    
+    */
+    //Method 2
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let point = touches.first?.locationInView(self.view)
+        let layer = self.kbaseView.layer.hitTest(point!)
+        if layer == self.blueLayer {
+            let Alert = UIAlertController(title: "Inside Blue Layer", message: nil, preferredStyle: .Alert)
+            let sureAction = UIAlertAction(title: "OK", style: .Default) { (action) in}
+            Alert.addAction(sureAction)
+            self.presentViewController(Alert, animated: true) {}
+        } else if layer == self.kbaseView.layer {
+            let Alert = UIAlertController(title: "Inside White Layer", message: nil, preferredStyle: .Alert)
+            let sureAction = UIAlertAction(title: "OK", style: .Default) { (action) in}
+            Alert.addAction(sureAction)
+            self.presentViewController(Alert, animated: true) {}
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
 
